@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "Raven",
+	"Description": "A comprehensive C++ framework plugin for Unreal Engine 5.7 that provides essential base classes, systems, and utilities to accelerate your game development workflow.",
+	"Category": "Other",
+	"CreatedBy": "RavenStormStudio",
+	"CreatedByURL": "https://github.com/RavenStormStudio",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "Raven",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

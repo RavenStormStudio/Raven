@@ -14,7 +14,8 @@ public class RavenSample : ModuleRules
 			"CoreUObject",
 			"Engine",
 			"InputCore",
-			"EnhancedInput"
+			"EnhancedInput",
+			"Raven",
 		]);
 	}
 }
