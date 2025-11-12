@@ -13,7 +13,7 @@
  * Provides centralized access to acquire and release pooled objects.
  */
 UCLASS()
-class RAVEN_API URavenPoolSubsystem : public UWorldSubsystem
+class RAVEN_API URavenPoolSubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -89,6 +89,12 @@ protected:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	virtual bool DoesSupportWorldType(EWorldType::Type WorldType) const override;
+
+	virtual void Tick(float DeltaTime) override;
+	virtual TStatId GetStatId() const override;
+	virtual bool IsTickable() const override { return true; }
+	virtual bool IsTickableInEditor() const override { return false; }
+	virtual bool IsTickableWhenPaused() const override { return false; }
 
 protected:
 	/** Gets or creates a pool for the specified class */

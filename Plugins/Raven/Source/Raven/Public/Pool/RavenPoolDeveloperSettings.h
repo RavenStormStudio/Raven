@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RavenPoolTypes.h"
+
 #include "Engine/DeveloperSettings.h"
 
 #include "Factory/RavenPoolFactoryUObject.h"
@@ -19,20 +21,24 @@ struct RAVEN_API FRavenPoolConfig
 	GENERATED_BODY()
 
 	/** The class of objects to pool */
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, meta=(BlueprintProtected = "true"))
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Basic", meta=(BlueprintProtected = "true"))
 	TObjectPtr<UClass> Class;
 
 	/** The factory class to use for creating and managing pooled objects */
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, meta=(BlueprintProtected = "true"))
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Basic", meta=(BlueprintProtected = "true"))
 	TSoftClassPtr<URavenPoolFactoryUObject> Factory;
 
 	/** Initial number of objects to pre-create in the pool (0 = no pre-warming) */
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, meta=(BlueprintProtected = "true", ClampMin = "0"))
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Size", meta=(BlueprintProtected = "true", ClampMin = "0"))
 	int32 InitialPoolSize = 0;
 
 	/** Maximum number of objects allowed in the pool (0 = unlimited) */
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, meta=(BlueprintProtected = "true", ClampMin = "0"))
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Size", meta=(BlueprintProtected = "true", ClampMin = "0"))
 	int32 MaxPoolSize = 0;
+
+	/** Pool management policy */
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Policy", meta=(BlueprintProtected = "true"))
+	FRavenPoolPolicy Policy;
 };
 
 /**

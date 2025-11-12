@@ -4,11 +4,14 @@
 
 #include "Pool/RavenPoolDeveloperSettings.h"
 #include "Pool/Factory/RavenPoolFactoryUObject.h"
+#include "Pool/RavenPoolStats.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogRavenPoolSubsystem, Log, All);
 
 UObject* URavenPoolSubsystem::Acquire(UClass* Class)
 {
+	SCOPE_CYCLE_COUNTER(STAT_PoolSubsystem_Acquire);
+
 	if (!IsValid(Class))
 	{
 		UE_LOG(LogRavenPoolSubsystem, Error, TEXT("Cannot acquire object: Class is invalid"));
@@ -26,6 +29,8 @@ UObject* URavenPoolSubsystem::Acquire(UClass* Class)
 
 bool URavenPoolSubsystem::Release(UObject* Object)
 {
+	SCOPE_CYCLE_COUNTER(STAT_PoolSubsystem_Release);
+
 	if (!IsValid(Object))
 	{
 		return false;
@@ -61,6 +66,8 @@ void URavenPoolSubsystem::RemoveFactory(UClass* Class)
 
 void URavenPoolSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
+	SCOPE_CYCLE_COUNTER(STAT_PoolSubsystem_Initialize);
+
 	Super::Initialize(Collection);
 
 	UE_LOG(LogRavenPoolSubsystem, Log, TEXT("Initializing RavenPoolSubsystem"));
@@ -70,18 +77,17 @@ void URavenPoolSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	{
 		if (PoolConfig.Class && !PoolConfig.Factory.IsNull())
 		{
-			TSubclassOf<URavenPoolFactoryUObject> FactoryClass = PoolConfig.Factory.LoadSynchronous();
-			if (FactoryClass)
+			if (const TSubclassOf<URavenPoolFactoryUObject> FactoryClass = PoolConfig.Factory.LoadSynchronous())
 			{
 				AddFactory(PoolConfig.Class, FactoryClass);
 				UE_LOG(LogRavenPoolSubsystem, Log, TEXT("Registered factory %s for class %s"),
 				       *FactoryClass->GetName(), *PoolConfig.Class->GetName());
 
 				// Get or create the pool and configure it
-				FRavenPool* Pool = GetPool(PoolConfig.Class);
-				if (Pool)
+				if (FRavenPool* Pool = GetPool(PoolConfig.Class))
 				{
 					Pool->SetMaxPoolSize(PoolConfig.MaxPoolSize);
+					Pool->SetPolicy(PoolConfig.Policy);
 
 					// Pre-warm the pool if configured
 					if (PoolConfig.InitialPoolSize > 0)
@@ -123,6 +129,8 @@ bool URavenPoolSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType)
 
 FRavenPool* URavenPoolSubsystem::GetPool(UClass* ObjectClass)
 {
+	SCOPE_CYCLE_COUNTER(STAT_PoolSubsystem_GetPool);
+
 	if (!IsValid(ObjectClass))
 	{
 		UE_LOG(LogRavenPoolSubsystem, Error, TEXT("GetPool called with invalid ObjectClass"));
@@ -154,6 +162,24 @@ const FRavenPool* URavenPoolSubsystem::GetPoolForClass(UClass* ObjectClass) cons
 		return nullptr;
 	}
 	return Pools.FindByKey(ObjectClass);
+}
+
+void URavenPoolSubsystem::Tick(float DeltaTime)
+{
+	SCOPE_CYCLE_COUNTER(STAT_PoolSubsystem_Tick);
+
+	Super::Tick(DeltaTime);
+
+	// Tick all pools for maintenance (idle cleanup, periodic shrinking, etc.)
+	for (FRavenPool& Pool : Pools)
+	{
+		Pool.Tick(DeltaTime);
+	}
+}
+
+TStatId URavenPoolSubsystem::GetStatId() const
+{
+	RETURN_QUICK_DECLARE_CYCLE_STAT(URavenPoolSubsystem, STATGROUP_Tickables);
 }
 
 int32 URavenPoolSubsystem::GetPoolSize(UClass* ObjectClass) const
