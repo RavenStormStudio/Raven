@@ -11,4 +11,8 @@ UCLASS()
 class RAVENSAMPLE_API URavenSampleGameInstance : public URavenGameInstanceBase
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable)
+	AActor* AcquireActor(UClass* Class);
 };
