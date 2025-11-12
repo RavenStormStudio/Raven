@@ -37,19 +37,60 @@ git clone https://github.com/RavenStormStudio/Raven.git <YourProject>/Plugins/Ra
 4. Check the **Enabled** checkbox
 5. Restart the editor
 
+## ✨ Features
+
+### Game Framework
+- **Base Classes**: Pre-configured base classes for common game framework components
+  - `ARavenActorBase` - Enhanced actor base class
+  - `ARavenGameModeBase` - Game mode with extended functionality
+  - `ARavenGameStateBase` - Game state base implementation
+  - `ARavenPlayerControllerBase` - Player controller foundation
+  - `URavenGameInstanceBase` - Game instance base class
+
+### Object Pooling System
+- **High-Performance Pooling**: Reduce GC pressure and improve performance by reusing objects
+- **Multiple Acquisition Strategies**:
+  - FIFO (First In First Out)
+  - LIFO (Last In First Out)
+  - LRU (Least Recently Used)
+  - Random
+- **Advanced Pool Management**:
+  - Configurable pool policies (max idle time, shrinking intervals, min pool size)
+  - Pre-warming support for initial pool population
+  - Automatic cleanup of idle objects
+  - Detailed statistics and profiling
+- **Factory Pattern**: Extensible factory system for custom object creation
+- **Blueprint Support**: Fully exposed to Blueprints for designer-friendly workflows
+- **World Subsystem**: Centralized `URavenPoolSubsystem` for easy access
+- **Developer Settings**: Project-wide pool configuration via editor settings
+
 ## 🎨 Plugin Structure
 
 ```
 Raven/
-├── Source/
+├── Source/Raven/
 │   ├── Public/
-│   │   ├── Framework/     # Base game framework classes
-│   │   ├── Pool/          # Object pooling system
-│   │   ├── Debug/         # Debugging utilities
-│   │   ├── UI/            # UI widgets and systems
-│   │   ├── Interaction/   # Interaction system
-│   │   └── ImGui/         # ImGui integration
-│   └── Private/
+│   │   ├── GameFramework/          # Base game framework classes
+│   │   │   ├── RavenActorBase.h
+│   │   │   ├── RavenGameModeBase.h
+│   │   │   ├── RavenGameStateBase.h
+│   │   │   ├── RavenPlayerControllerBase.h
+│   │   │   └── RavenGameInstanceBase.h
+│   │   └── Pool/                   # Object pooling system
+│   │       ├── RavenPool.h         # Core pool implementation
+│   │       ├── RavenPoolSubsystem.h
+│   │       ├── RavenPoolTypes.h    # Pool enums and structs
+│   │       ├── RavenPoolStats.h
+│   │       ├── RavenPoolHandle.h
+│   │       ├── RavenPoolDeveloperSettings.h
+│   │       ├── Interface/
+│   │       │   └── Poolable.h      # Interface for poolable objects
+│   │       ├── Factory/
+│   │       │   ├── RavenPoolFactoryUObject.h
+│   │       │   └── RavenPoolActorFactory.h
+│   │       └── Strategy/
+│   │           └── RavenPoolStrategy.h
+│   └── Private/                    # Implementation files
 ├── Resources/
 └── Raven.uplugin
 ```
