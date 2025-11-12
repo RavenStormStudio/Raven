@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class Raven : ModuleRules
+public class RavenSample : ModuleRules
 {
-	public Raven(ReadOnlyTargetRules target)
+	public RavenSample(ReadOnlyTargetRules target)
 		: base(target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;

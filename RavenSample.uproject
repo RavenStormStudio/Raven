@@ -5,7 +5,7 @@
 	"Description": "",
 	"Modules": [
 		{
-			"Name": "Raven",
+			"Name": "RavenSample",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

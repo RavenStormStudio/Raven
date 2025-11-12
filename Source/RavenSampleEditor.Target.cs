@@ -2,14 +2,14 @@
 
 using UnrealBuildTool;
 
-public class RavenTarget : TargetRules
+public class RavenSampleEditorTarget : TargetRules
 {
-	public RavenTarget(TargetInfo target)
+	public RavenSampleEditorTarget(TargetInfo target)
 		: base(target)
 	{
-		Type = TargetType.Game;
+		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V6;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_7;
-		ExtraModuleNames.Add("Raven");
+		ExtraModuleNames.Add("RavenSample");
 	}
 }
